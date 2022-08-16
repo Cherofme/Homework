@@ -1,11 +1,9 @@
 from math import pi
 
-def square(diametr):
-    s = (diametr**2)/2
+def square(a):
+    s = (a**2)
     return s
 def rectangle(a,b):
-    s = (a * b)
-    return s
+    return a * b
 def circle(radius):
-    s = pi * (radius**2)
-    return s
+    return pi * (radius**2)

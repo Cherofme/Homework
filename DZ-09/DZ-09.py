@@ -7,6 +7,7 @@ s_1 = sq(10)
 s_2 = rec(4, 5)
 # Just sub 2 result
 result = s_1 - s_2
+print(result)
 
 if result > 0:
     print('s1 > s2')
