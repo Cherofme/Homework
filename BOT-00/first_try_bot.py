@@ -63,14 +63,12 @@ def user_finish(update, context):
 
     delimetr = '-------------------'
 
-    fh = open('test.txt', 'w')
+    fh = open('test.txt', 'a')
     user_info_list = dict()
     user_info_list['User_name'] = user_data['name']
     user_info_list['User_city'] = user_data['city']
-    user_info_list['User_name'] = user_data['name']
-
+    user_info_list['User_phone'] = user_data['phone']
     fh.write('\n'.join(user_info_list) + '\n')
-    fh.write(delimetr)
     fh.close()
 
 
