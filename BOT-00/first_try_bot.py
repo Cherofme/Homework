@@ -61,6 +61,8 @@ def user_finish(update, context):
     
     user_text = "Thanks " + user_data.get('name') + " 😉"
 
+    delimetr = '-------------------'
+
     fh = open('test.txt', 'w')
     user_info_list = dict()
     user_info_list['User_name'] = user_data['name']
@@ -68,7 +70,9 @@ def user_finish(update, context):
     user_info_list['User_name'] = user_data['name']
 
     fh.write('\n'.join(user_info_list) + '\n')
+    fh.write(delimetr)
     fh.close()
+
 
     context.bot.send_message(chat_id=chat.id, text=user_text)
     return ConversationHandler.END  
