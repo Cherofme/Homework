@@ -122,8 +122,8 @@ def main() -> None:
 
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("menu", menu))
-    # dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("cancel", cancel))
     dispatcher.add_handler(CallbackQueryHandler(User_search, pattern="User_search"))
 
     branch_user_handler = ConversationHandler(
