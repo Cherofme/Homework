@@ -22,7 +22,7 @@ def menu(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [
             InlineKeyboardButton("Enter_info", callback_data="user_info"),
-            InlineKeyboardButton("User_search", callback_data="user_search"),
+            InlineKeyboardButton("User_search", callback_data="User_search"),
         ]
     ]
 
@@ -72,7 +72,8 @@ def user_finish(update, context):
 
     context.bot.send_message(chat_id=chat.id, text=user_text)
     return ConversationHandler.END  
-    
+
+
 def User_search(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [
@@ -104,7 +105,45 @@ def User_search(update: Update, context: CallbackContext) -> None:
 
     fh.close()
 
+def search_name(update, context):
+    chat = update.effective_chat
+    search_name = context.args[0]
 
+    result = 'Contact not found'
+
+    fh = open('test.txt', 'r')
+    while True:
+        person_line = fh.readline().rstrip('\n')
+        person_list = person_line.split(';')
+        if person_list[0] == search_name:
+            result = person_line
+            break
+        if not person_line:
+            break
+    fh.close()
+
+    user_data['phone'] = update.message.text
+    context.bot.send_message(chat_id=chat.id, text=result)
+
+def search_adress(update, context):
+    chat = update.effective_chat
+    search_adress = context.args[0]
+
+    result = 'Contact not found'
+
+    fh = open('test.txt', 'r')
+    while True:
+        person_line = fh.readline().rstrip('\n')
+        person_list = person_line.split(';')
+        if person_list[1] == search_adress:
+            result = person_line
+            break
+        if not person_line:
+            break
+    fh.close()
+
+    user_data['phone'] = update.message.text
+    context.bot.send_message(chat_id=chat.id, text=result)
 
 def cancel(update, context):
     update.message.reply_text('Cancelled by user. Send /menu to start again')
@@ -124,12 +163,13 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("menu", menu))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("cancel", cancel))
+    dispatcher.add_handler(CommandHandler("search_name", search_name))
+    dispatcher.add_handler(CommandHandler("search_adress", search_adress))
+    # dispatcher.add_handler(CommandHandler("search_phone", search_phone))
     dispatcher.add_handler(CallbackQueryHandler(User_search, pattern="User_search"))
 
     branch_user_handler = ConversationHandler(
         entry_points = [CallbackQueryHandler(user_name, 'user_info')], 
-        
-        
         states={
             STEP_TWO:   [MessageHandler(Filters.text & (~ Filters.command), user_adress)],
             STEP_THREE: [MessageHandler(Filters.text & (~ Filters.command), user_phone)],
