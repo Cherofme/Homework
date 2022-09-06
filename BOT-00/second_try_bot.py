@@ -145,6 +145,27 @@ def search_adress(update, context):
     user_data['phone'] = update.message.text
     context.bot.send_message(chat_id=chat.id, text=result)
 
+
+def search_phone(update, context):
+    chat = update.effective_chat
+    search_phone = context.args[0]
+
+    result = 'Contact not found'
+
+    fh = open('test.txt', 'r')
+    while True:
+        person_line = fh.readline().rstrip('\n')
+        person_list = person_line.split(';')
+        if person_list[2] == search_phone:
+            result = person_line
+            break
+        if not person_line:
+            break
+    fh.close()
+
+    user_data['phone'] = update.message.text
+    context.bot.send_message(chat_id=chat.id, text=result)
+
 def cancel(update, context):
     update.message.reply_text('Cancelled by user. Send /menu to start again')
     return ConversationHandler.END
@@ -165,7 +186,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("cancel", cancel))
     dispatcher.add_handler(CommandHandler("search_name", search_name))
     dispatcher.add_handler(CommandHandler("search_adress", search_adress))
-    # dispatcher.add_handler(CommandHandler("search_phone", search_phone))
+    dispatcher.add_handler(CommandHandler("search_phone", search_phone))
     dispatcher.add_handler(CallbackQueryHandler(User_search, pattern="User_search"))
 
     branch_user_handler = ConversationHandler(
