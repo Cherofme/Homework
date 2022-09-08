@@ -22,7 +22,7 @@ def menu(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [
             InlineKeyboardButton("Enter_info", callback_data="user_info"),
-            InlineKeyboardButton("User_search", callback_data="user_search"),
+            InlineKeyboardButton("User_search", callback_data="User_search"),
         ]
     ]
 
@@ -72,20 +72,13 @@ def user_finish(update, context):
 
     context.bot.send_message(chat_id=chat.id, text=user_text)
     return ConversationHandler.END  
-    
-def User_search(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("Ім'я", callback_data="1"),
-            InlineKeyboardButton("Місто", callback_data="2"),
-        ],
-        [
-            InlineKeyboardButton("Номер телефону", callback_data="3")
-        ]
-    ]
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text("Choose one of the options  :", reply_markup=reply_markup)
+
+def User_search(update: Update, context: CallbackContext) -> None:
+    """Displays info on how to use the bot."""
+    update.message.reply_text("Use /search_name to search contact by name. \nThis bot can search contact`s by adress just write /search_adress. \nAlso you can search some-body of you`recantacts by phone ")
+
+
     
     user_data['phone'] = update.message.text
     
@@ -104,7 +97,66 @@ def User_search(update: Update, context: CallbackContext) -> None:
 
     fh.close()
 
+def search_name(update, context):
+    chat = update.effective_chat
+    search_name = context.args[0]
 
+    result = 'Contact not found'
+
+    fh = open('test.txt', 'r')
+    while True:
+        person_line = fh.readline().rstrip('\n')
+        person_list = person_line.split(';')
+        if person_list[0] == search_name:
+            result = person_line
+            break
+        if not person_line:
+            break
+    fh.close()
+
+    user_data['phone'] = update.message.text
+    context.bot.send_message(chat_id=chat.id, text=result)
+
+def search_adress(update, context):
+    chat = update.effective_chat
+    search_adress = context.args[0]
+
+    result = 'Contact not found'
+
+    fh = open('test.txt', 'r')
+    while True:
+        person_line = fh.readline().rstrip('\n')
+        person_list = person_line.split(';')
+        if person_list[1] == search_adress:
+            result = person_line
+            break
+        if not person_line:
+            break
+    fh.close()
+
+    user_data['phone'] = update.message.text
+    context.bot.send_message(chat_id=chat.id, text=result)
+
+
+def search_phone(update, context):
+    chat = update.effective_chat
+    search_phone = context.args[0]
+
+    result = 'Contact not found'
+
+    fh = open('test.txt', 'r')
+    while True:
+        person_line = fh.readline().rstrip('\n')
+        person_list = person_line.split(';')
+        if person_list[2] == search_phone:
+            result = person_line
+            break
+        if not person_line:
+            break
+    fh.close()
+
+    user_data['phone'] = update.message.text
+    context.bot.send_message(chat_id=chat.id, text=result)
 
 def cancel(update, context):
     update.message.reply_text('Cancelled by user. Send /menu to start again')
@@ -124,12 +176,13 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("menu", menu))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("cancel", cancel))
-    dispatcher.add_handler(CallbackQueryHandler(User_search, pattern="User_search"))
+    dispatcher.add_handler(CommandHandler("search_name", search_name))
+    dispatcher.add_handler(CommandHandler("search_adress", search_adress))
+    dispatcher.add_handler(CommandHandler("search_phone", search_phone))
+    dispatcher.add_handler(CallbackQueryHandler("User_search", User_search))
 
     branch_user_handler = ConversationHandler(
         entry_points = [CallbackQueryHandler(user_name, 'user_info')], 
-        
-        
         states={
             STEP_TWO:   [MessageHandler(Filters.text & (~ Filters.command), user_adress)],
             STEP_THREE: [MessageHandler(Filters.text & (~ Filters.command), user_phone)],

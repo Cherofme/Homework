@@ -75,35 +75,15 @@ def user_finish(update, context):
 
 
 def User_search(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("Ім'я", callback_data="1"),
-            InlineKeyboardButton("Місто", callback_data="2"),
-        ],
-        [
-            InlineKeyboardButton("Номер телефону", callback_data="3")
-        ]
-    ]
+    query = update.callback_query
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text("Choose one of the options  :", reply_markup=reply_markup)
-    
-    user_data['phone'] = update.message.text
-    
-    user_search = '123-99-99'
-    
-    fh = open('test-denys.txt')
-    while True:
-        line = fh.readline().rstrip('\n')
-        user_info = line.split('|')
-        if user_info[2] == user_search:
-            print(user_info[0])
-            break
-    
-        if not line:
-            break
+    # CallbackQueries need to be answered, even if no notification to the user is needed
+    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+    query.answer()
 
-    fh.close()
+    query.edit_message_text(text="Use /search_name to search contact by name. \nThis bot can search contact`s by adress just write /search_adress. \nAlso you can search some-body of you`recantacts by /search_phone ")
+
+
 
 def search_name(update, context):
     chat = update.effective_chat
