@@ -21,8 +21,8 @@ def start(update: Update, context: CallbackContext) -> None:
 def menu(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [
-            InlineKeyboardButton("Enter_info", callback_data="user_info"),
-            InlineKeyboardButton("User_search", callback_data="User_search"),
+            InlineKeyboardButton("Enter", callback_data="user_info"),
+            InlineKeyboardButton("Search", callback_data="User_search"),
         ]
     ]
 
@@ -35,7 +35,7 @@ def menu(update: Update, context: CallbackContext) -> None:
 def user_name(update, context) -> int:
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text="enter your name")
+    query.edit_message_text(text="enter name")
     return STEP_TWO
 
 
@@ -43,7 +43,7 @@ def user_adress(update, context):
     chat = update.effective_chat
     user_data['name'] = update.message.text 
 
-    context.bot.send_message(chat_id=chat.id, text="enter your city")
+    context.bot.send_message(chat_id=chat.id, text="enter city")
     return STEP_THREE    
 
 
@@ -51,7 +51,7 @@ def user_phone(update, context):
     chat = update.effective_chat
     user_data['city'] = update.message.text 
 
-    context.bot.send_message(chat_id=chat.id, text="enter your phone ")
+    context.bot.send_message(chat_id=chat.id, text="enter phone ")
     return STEP_FOUR    
 
 
@@ -59,7 +59,7 @@ def user_finish(update, context):
     chat = update.effective_chat
     user_data['phone'] = update.message.text
     
-    user_text = "Thanks " + user_data.get('name') + " 😉"
+    user_text = "Thanks " + '😇'
 
     delimetr = '-------------------'
 
@@ -81,7 +81,7 @@ def User_search(update: Update, context: CallbackContext) -> None:
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     query.answer()
 
-    query.edit_message_text(text="Use /search_name to search contact by name. \nThis bot can search contact`s by adress just write /search_adress. \nAlso you can search some-body of you`recantacts by /search_phone ")
+    query.edit_message_text(text="Use /search_name to search contact by name. \nThis bot can search contact`s by adress just write /search_adress. \nAlso you can search some-body of you`re contacts by /search_phone ")
 
 
 
