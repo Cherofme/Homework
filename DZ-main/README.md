@@ -1,1 +1,1 @@
-# dz_django
+# dz_main
